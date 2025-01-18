@@ -319,7 +319,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(
         description=(
-            f'Music Validity Checker v{VERSION}\n\n'
+            f'\nMusic Validity Checker v{VERSION}\n\n'
             '************\n'
             'Maintainer: Astra <astralee95@gmail.com>\n'
             '************\n\n'
@@ -328,7 +328,7 @@ if __name__ == "__main__":
             '- 檢測音訊品質問題\n'
             '- 產生詳細的 Excel 報告\n\n'
             '範例:\n'
-            'check_music_validity.exe --input input_directory/ --output report.xlsx'
+            'check_music_validity.exe --input input_directory/ --output report.xlsx\n'
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter
     )

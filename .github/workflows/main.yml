@@ -92,7 +92,7 @@ jobs:
       id: check_tag
       run: |
         $tag_name = "${{ steps.determine_tag_name.outputs.tag_name }}"
-        $response = curl -s -H "Authorization: token ${{ secrets.PAT }}" `
+        $response = curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" `
           "https://api.github.com/repos/${{ github.repository }}/git/refs/tags/$tag_name"
         
         if ($response -and ($response | ConvertFrom-Json).ref) {
@@ -104,14 +104,15 @@ jobs:
     - name: Create Release
       id: create_release
       if: env.tag_exists == 'false'  # Only create release if tag does not exist
-      uses: actions/create-release@v1
+      uses: softprops/action-gh-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.PAT }}
       with:
         tag_name: ${{ steps.determine_tag_name.outputs.tag_name }}
-        release_name: ${{ steps.determine_tag_name.outputs.tag_name }}
+        name: ${{ steps.determine_tag_name.outputs.tag_name }}
         draft: false
         prerelease: false
+        files: ./dist/check_music_validity.exe
 
     - name: Upload Release Asset
       if: ${{ github.event.inputs.upload_artifact == 'true' && env.tag_exists == 'false' }}  # Only upload if tag does not exist
