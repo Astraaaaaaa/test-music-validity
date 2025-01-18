@@ -24,6 +24,7 @@ jobs:
     permissions:
       contents: write
       packages: write
+      actions: write
     strategy:
       fail-fast: false
 
@@ -105,18 +106,19 @@ jobs:
         }
         
     - name: Create Release
-      id: create_release
       if: env.tag_exists == 'false'
-      uses: softprops/action-gh-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: ncipollo/release-action@v1
       with:
-        tag_name: ${{ steps.determine_tag_name.outputs.tag_name }}
-        name: ${{ steps.determine_tag_name.outputs.tag_name }}
+        token: ${{ secrets.PAT }}
+        tag: ${{ steps.determine_tag_name.outputs.tag_name }}
+        name: Release ${{ steps.determine_tag_name.outputs.tag_name }}
+        body: |
+          Release ${{ steps.determine_tag_name.outputs.tag_name }}
+          Automated release from GitHub Actions
         draft: false
         prerelease: false
-        files: ./dist/check_music_validity.exe
-        generate_release_notes: true
+        artifacts: "./dist/check_music_validity.exe"
+        allowUpdates: true
 
     - name: Upload Release Asset
       if: ${{ github.event.inputs.upload_artifact == 'true' && env.tag_exists == 'false' }}  # Only upload if tag does not exist
