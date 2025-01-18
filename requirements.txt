@@ -1,0 +1,11 @@
+mutagen
+pydub
+pandas
+numpy
+openpyxl
+ffmpeg
+ffmpeg-python
+ffmpeg-downloader
+tqdm
+signal
+pyinstaller
