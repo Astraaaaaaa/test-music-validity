@@ -106,18 +106,18 @@ jobs:
         }
         
     - name: Create Release
-      if: env.tag_exists == 'false'
+      if: ${{ env.tag_exists == 'false' }}
       uses: ncipollo/release-action@v1
       with:
         token: ${{ secrets.PAT }}
-        tag: ${{ steps.determine_tag_name.outputs.tag_name }}
-        name: Release ${{ steps.determine_tag_name.outputs.tag_name }}
+        tag: ${{ env.tag_name }}
+        name: Release ${{ env.tag_name }}
         body: |
-          Release ${{ steps.determine_tag_name.outputs.tag_name }}
+          Release ${{ env.tag_name }}
           Automated release from GitHub Actions
         draft: false
         prerelease: false
-        artifacts: "./dist/check_music_validity.exe"
+        artifacts: ./dist/check_music_validity.exe
         allowUpdates: true
 
     - name: Upload Release Asset
