@@ -319,7 +319,7 @@ if __name__ == "__main__":
 
     if not args.output:
         args.output = "report.xlsx"
-        print(f"Output file     : {ITALIC}{"report.xlsx"}{RESET} (如果沒有提供, 則使用 report.xlsx 為檔名)")
+        print(f"Output file     : {ITALIC}report.xlsx{RESET} (如果沒有提供, 則使用 report.xlsx 為檔名)")
     else:
         print(f"Output file     : {ITALIC}{args.output:<12}{RESET} (如果沒有提供, 則使用 report.xlsx 為檔名)")
     print("")
