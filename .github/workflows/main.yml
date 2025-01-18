@@ -103,16 +103,16 @@ jobs:
         
     - name: Create Release
       id: create_release
-      if: env.tag_exists == 'false'  # Only create release if tag does not exist
+      if: env.tag_exists == 'false'
       uses: softprops/action-gh-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.PAT }}
       with:
+        token: ${{ secrets.GITHUB_TOKEN }}  # Changed to use default GITHUB_TOKEN
         tag_name: ${{ steps.determine_tag_name.outputs.tag_name }}
         name: ${{ steps.determine_tag_name.outputs.tag_name }}
         draft: false
         prerelease: false
         files: ./dist/check_music_validity.exe
+        generate_release_notes: true
 
     - name: Upload Release Asset
       if: ${{ github.event.inputs.upload_artifact == 'true' && env.tag_exists == 'false' }}  # Only upload if tag does not exist
