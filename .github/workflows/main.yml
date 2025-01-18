@@ -106,7 +106,7 @@ jobs:
       if: env.tag_exists == 'false'
       uses: softprops/action-gh-release@v1
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}  # Changed to use default GITHUB_TOKEN
+        token: ${{ secrets.PAT }}  # Changed to use default GITHUB_TOKEN
         tag_name: ${{ steps.determine_tag_name.outputs.tag_name }}
         name: ${{ steps.determine_tag_name.outputs.tag_name }}
         draft: false
