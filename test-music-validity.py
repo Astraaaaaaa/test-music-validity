@@ -289,7 +289,7 @@ if __name__ == "__main__":
     print(f"{YELLOW}{REVERSE}Welcome to the Music Validity Checker!{RESET}\n")
     
     print(f"{ORANGE}範例: 複製下面的命令並貼上到命令提示字元。{RESET}")
-    print(f"{ORANGE}{BOLD}checkMusicValidity.exe --input input_directory --output report.xlsx{RESET}\n")
+    print(f"{ORANGE}{BOLD}check_music_validity.exe --input input_directory --output report.xlsx{RESET}\n")
 
     parser = argparse.ArgumentParser(
         description=(
@@ -302,7 +302,7 @@ if __name__ == "__main__":
             '- 檢測音訊品質問題\n'
             '- 產生詳細的 Excel 報告\n\n'
             '範例:\n'
-            'checkMusicValidity.exe --input input_directory/ --output report.xlsx'
+            'check_music_validity.exe --input input_directory/ --output report.xlsx'
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
