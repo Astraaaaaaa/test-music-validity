@@ -266,6 +266,29 @@ def examine_music_folder(folder_path, output_excel):
 # output_report = "report.xlsx"
 # examine_music_folder(folder_to_check, output_report)
 
+def setup_ffmpeg():
+    """Setup FFmpeg paths for the application"""
+    try:
+        if getattr(sys, 'frozen', False):
+            # If the application is run as a bundle
+            base_path = sys._MEIPASS
+            ffmpeg_path = os.path.join(base_path, 'ffmpeg.exe')
+            ffprobe_path = os.path.join(base_path, 'ffprobe.exe')
+        else:
+            # If running in development
+            ffmpeg_path = 'ffmpeg'
+            ffprobe_path = 'ffprobe'
+
+        # Set paths for pydub
+        AudioSegment.converter = ffmpeg_path
+        AudioSegment.ffmpeg = ffmpeg_path
+        AudioSegment.ffprobe = ffprobe_path
+        
+        return True
+    except Exception as e:
+        print(f"Warning: FFmpeg setup failed: {e}")
+        return False
+    
 # Enable virtual terminal processing on Windows
 def enable_virtual_terminal_processing():
     kernel32 = ctypes.windll.kernel32
@@ -280,6 +303,9 @@ VERSION = "1.0.0"
 if __name__ == "__main__":
     # Register the signal handler for Ctrl+C
     signal.signal(signal.SIGINT, signal_handler)
+
+    # Setup FFmpeg before running main code
+    setup_ffmpeg()
 
     # Call the function to enable virtual terminal processing
     if os.name == 'nt':

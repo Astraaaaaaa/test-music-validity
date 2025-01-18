@@ -30,8 +30,29 @@ jobs:
       with:
         python-version: 3.7
 
-    - run: pip install -r requirements.txt
-    - run: pyinstaller test-music-validity.py --onefile --icon=icon.ico --name=check_music_validity
+    # Install FFmpeg using Chocolatey
+    - name: Install FFmpeg
+      run: |
+        choco install ffmpeg -y
+        refreshenv
+        # Verify FFmpeg installation
+        ffmpeg -version
+        ffprobe -version
+
+    # Add FFmpeg to PATH
+    - name: Add FFmpeg to PATH
+      run: |
+        echo "C:\ProgramData\chocolatey\lib\ffmpeg\tools\ffmpeg\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Build executable
+      run: |
+        pyinstaller test-music-validity.py --onefile --icon=icon.ico --name=check_music_validity --add-binary "C:\ProgramData\chocolatey\lib\ffmpeg\tools\ffmpeg\bin\ffmpeg.exe;." --add-binary "C:\ProgramData\chocolatey\lib\ffmpeg\tools\ffmpeg\bin\ffprobe.exe;."
+
     # Optionally verify that it works (provided that it does not need user interaction)
     - run: ./dist/check_music_validity.exe
     - uses: actions/upload-artifact@v3
