@@ -70,8 +70,14 @@ jobs:
         
         # Apply additional UPX compression with best settings
         cd dist
-        upx --best --lzma --force --compress-exports=0 --compress-resources=0 --strip-relocs=0 --compress-icons=0 check_music_validity.exe
-
+        upx --ultra-brute --best --lzma --force `
+          --compress-exports=1 `
+          --compress-icons=1 `
+          --compress-resources=1 `
+          --strip-relocs=1 `
+          --no-backup `
+          check_music_validity.exe
+          
         # Get compressed size
         $compressedSize = (Get-Item "check_music_validity.exe").length / 1MB
         Write-Host "Compressed size: $([math]::Round($compressedSize, 2)) MB"
