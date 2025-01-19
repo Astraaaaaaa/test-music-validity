@@ -62,7 +62,20 @@ jobs:
 
     - name: Build executable
       run: |
-        pyinstaller test-music-validity.py --onefile --icon=icon.ico --name=check_music_validity --add-binary "C:\ProgramData\chocolatey\lib\ffmpeg\tools\ffmpeg\bin\ffmpeg.exe;." --add-binary "C:\ProgramData\chocolatey\lib\ffmpeg\tools\ffmpeg\bin\ffprobe.exe;." --upx-dir="C:\ProgramData\chocolatey\lib\upx\tools" --upx-exclude="vcruntime140.dll" --upx-exclude="python*.dll"
+        pyinstaller test-music-validity.py --onefile --icon=icon.ico --name=check_music_validity --add-binary "C:\ProgramData\chocolatey\lib\ffmpeg\tools\ffmpeg\bin\ffmpeg.exe;." --add-binary "C:\ProgramData\chocolatey\lib\ffmpeg\tools\ffmpeg\bin\ffprobe.exe;."
+        
+        # Get original size
+        $originalSize = (Get-Item "dist\check_music_validity.exe").length / 1MB
+        Write-Host "Original size: $([math]::Round($originalSize, 2)) MB"
+        
+        # Apply additional UPX compression with best settings
+        cd dist
+        upx --best --lzma --compress-exports=0 --compress-resources=0 --strip-relocs=0 --compress-icons=0 check_music_validity.exe
+
+        # Get compressed size
+        $compressedSize = (Get-Item "check_music_validity.exe").length / 1MB
+        Write-Host "Compressed size: $([math]::Round($compressedSize, 2)) MB"
+        Write-Host "Reduction: $([math]::Round(($originalSize - $compressedSize) / $originalSize * 100, 2))%"        
 
     # Optionally verify that it works (provided that it does not need user interaction)
     - run: ./dist/check_music_validity.exe
