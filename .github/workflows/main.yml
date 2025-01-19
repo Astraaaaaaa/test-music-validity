@@ -97,11 +97,6 @@ jobs:
           --all-filters `
           check_music_validity.exe
 
-        # Remove unnecessary files after compression
-        Remove-Item -Force *.pyd -ErrorAction SilentlyContinue
-        Remove-Item -Force *.dll -ErrorAction SilentlyContinue
-        Remove-Item -Force *.manifest -ErrorAction SilentlyContinue
-
         # Get compressed size
         $compressedSize = (Get-Item "check_music_validity.exe").length / 1MB
         Write-Host "Compressed size: $([math]::Round($compressedSize, 2)) MB"
