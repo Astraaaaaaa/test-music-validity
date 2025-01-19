@@ -42,10 +42,6 @@ jobs:
         # Verify FFmpeg installation
         ffmpeg -version
         ffprobe -version
-    # Add FFmpeg to PATH
-    - name: Add FFmpeg to PATH
-      run: |
-        echo "C:\ProgramData\chocolatey\lib\ffmpeg\tools\ffmpeg\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
     
     - name: Install UPX
       run: |
@@ -54,6 +50,11 @@ jobs:
         # Verify UPX installation
         upx --version
 
+    # Add FFmpeg to PATH
+    - name: Add FFmpeg to PATH
+      run: |
+        echo "C:\ProgramData\chocolatey\lib\ffmpeg\tools\ffmpeg\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
     - name: Install Python dependencies
       run: |
         python -m pip install --upgrade pip
@@ -61,46 +62,7 @@ jobs:
 
     - name: Build executable
       run: |
-        pyinstaller test-music-validity.py --onefile --icon=icon.ico --name=check_music_validity `
-          --add-binary "C:\ProgramData\chocolatey\lib\ffmpeg\tools\ffmpeg\bin\ffmpeg.exe;." `
-          --add-binary "C:\ProgramData\chocolatey\lib\ffmpeg\tools\ffmpeg\bin\ffprobe.exe;." `
-          --upx-dir="C:\ProgramData\chocolatey\lib\upx\tools" `
-          --noupx `
-          --clean `
-          --strip `
-          --noupx `
-          --clean `
-          --strip `
-          --exclude-module tkinter `
-          --exclude-module matplotlib `
-          --exclude-module PIL `
-          --exclude-module PyQt5 `
-          --exclude-module PySide2 `
-          --exclude-module wx
-          
-        # Get original size
-        $originalSize = (Get-Item "dist\check_music_validity.exe").length / 1MB
-        Write-Host "Original size: $([math]::Round($originalSize, 2)) MB"
-        
-        # Apply additional UPX compression with best settings
-        cd dist
-        upx --ultra-brute --best --lzma --force `
-          --compress-exports=1 `
-          --compress-icons=1 `
-          --compress-resources=1 `
-          --strip-relocs=1 `
-          --no-backup `
-          --overlay=strip `
-          --8086 `
-          --8mib-ram `
-          --all-methods `
-          --all-filters `
-          check_music_validity.exe
-
-        # Get compressed size
-        $compressedSize = (Get-Item "check_music_validity.exe").length / 1MB
-        Write-Host "Compressed size: $([math]::Round($compressedSize, 2)) MB"
-        Write-Host "Reduction: $([math]::Round(($originalSize - $compressedSize) / $originalSize * 100, 2))%"        
+        pyinstaller test-music-validity.py --onefile --icon=icon.ico --name=check_music_validity --add-binary "C:\ProgramData\chocolatey\lib\ffmpeg\tools\ffmpeg\bin\ffmpeg.exe;." --add-binary "C:\ProgramData\chocolatey\lib\ffmpeg\tools\ffmpeg\bin\ffprobe.exe;." --upx-dir="C:\ProgramData\chocolatey\lib\upx\tools" --upx-exclude="vcruntime140.dll" --upx-exclude="python*.dll"
 
     # Optionally verify that it works (provided that it does not need user interaction)
     - run: ./dist/check_music_validity.exe
