@@ -62,8 +62,20 @@ jobs:
 
     - name: Build executable
       run: |
-        pyinstaller test-music-validity.py --onefile --icon=icon.ico --name=check_music_validity --add-binary "C:\ProgramData\chocolatey\lib\ffmpeg\tools\ffmpeg\bin\ffmpeg.exe;." --add-binary "C:\ProgramData\chocolatey\lib\ffmpeg\tools\ffmpeg\bin\ffprobe.exe;."
-        
+        pyinstaller test-music-validity.py --onefile --icon=icon.ico --name=check_music_validity `
+          --add-binary "C:\ProgramData\chocolatey\lib\ffmpeg\tools\ffmpeg\bin\ffmpeg.exe;." `
+          --add-binary "C:\ProgramData\chocolatey\lib\ffmpeg\tools\ffmpeg\bin\ffprobe.exe;." `
+          --upx-dir="C:\ProgramData\chocolatey\lib\upx\tools" `
+          --noupx `  # Disable initial UPX to apply our own settings later
+          --clean `  # Clean PyInstaller cache
+          --strip `  # Strip symbols from binary
+          --exclude-module tkinter `  # Remove unnecessary modules
+          --exclude-module matplotlib `
+          --exclude-module PIL `
+          --exclude-module PyQt5 `
+          --exclude-module PySide2 `
+          --exclude-module wx
+          
         # Get original size
         $originalSize = (Get-Item "dist\check_music_validity.exe").length / 1MB
         Write-Host "Original size: $([math]::Round($originalSize, 2)) MB"
@@ -77,7 +89,7 @@ jobs:
           --strip-relocs=1 `
           --no-backup `
           check_music_validity.exe
-          
+
         # Get compressed size
         $compressedSize = (Get-Item "check_music_validity.exe").length / 1MB
         Write-Host "Compressed size: $([math]::Round($compressedSize, 2)) MB"
