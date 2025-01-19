@@ -75,6 +75,29 @@ jobs:
           --exclude-module PyQt5 `
           --exclude-module PySide2 `
           --exclude-module wx `
+          --exclude-module _tkinter `
+          --exclude-module doctest `
+          --exclude-module unittest `
+          --exclude-module xml `
+          --exclude-module pydoc `
+          --exclude-module email `
+          --exclude-module html `
+          --exclude-module http `
+          --exclude-module logging `
+          --exclude-module pkg_resources `
+          --exclude-module multiprocessing `
+          --exclude-module asyncio `
+          --exclude-module concurrent `
+          --exclude-module xmlrpc `
+          --exclude-module urllib `
+          --exclude-module ftplib `
+          --exclude-module setuptools `
+          --exclude-module distutils `
+          --exclude-module tty `
+          --exclude-module optparse `
+          --exclude-module nose `
+          --windowed `
+          --noconfirm
           
         # Get original size
         $originalSize = (Get-Item "dist\check_music_validity.exe").length / 1MB
@@ -88,6 +111,11 @@ jobs:
           --compress-resources=1 `
           --strip-relocs=1 `
           --no-backup `
+          --overlay=strip `
+          --8086 `
+          --8mib-ram `
+          --all-methods `
+          --all-filters `
           check_music_validity.exe
 
         # Get compressed size
