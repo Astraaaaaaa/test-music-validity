@@ -42,6 +42,10 @@ jobs:
         # Verify FFmpeg installation
         ffmpeg -version
         ffprobe -version
+    # Add FFmpeg to PATH
+    - name: Add FFmpeg to PATH
+      run: |
+        echo "C:\ProgramData\chocolatey\lib\ffmpeg\tools\ffmpeg\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
     
     - name: Install UPX
       run: |
@@ -49,11 +53,6 @@ jobs:
         refreshenv
         # Verify UPX installation
         upx --version
-
-    # Add FFmpeg to PATH
-    - name: Add FFmpeg to PATH
-      run: |
-        echo "C:\ProgramData\chocolatey\lib\ffmpeg\tools\ffmpeg\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
     - name: Install Python dependencies
       run: |
@@ -69,34 +68,16 @@ jobs:
           --noupx `
           --clean `
           --strip `
+          --noupx `
+          --clean `
+          --strip `
           --exclude-module tkinter `
           --exclude-module matplotlib `
           --exclude-module PIL `
           --exclude-module PyQt5 `
           --exclude-module PySide2 `
           --exclude-module wx `
-          --exclude-module _tkinter `
-          --exclude-module doctest `
-          --exclude-module unittest `
-          --exclude-module xml `
-          --exclude-module pydoc `
-          --exclude-module email `
-          --exclude-module html `
-          --exclude-module http `
-          --exclude-module logging `
-          --exclude-module pkg_resources `
-          --exclude-module multiprocessing `
-          --exclude-module asyncio `
-          --exclude-module concurrent `
-          --exclude-module xmlrpc `
-          --exclude-module ftplib `
-          --exclude-module setuptools `
-          --exclude-module distutils `
-          --exclude-module tty `
-          --exclude-module optparse `
-          --exclude-module nose `
-          --windowed `
-          --noconfirm
+          test-music-validity.py
           
         # Get original size
         $originalSize = (Get-Item "dist\check_music_validity.exe").length / 1MB
@@ -121,7 +102,7 @@ jobs:
         Remove-Item -Force *.pyd -ErrorAction SilentlyContinue
         Remove-Item -Force *.dll -ErrorAction SilentlyContinue
         Remove-Item -Force *.manifest -ErrorAction SilentlyContinue
-        
+
         # Get compressed size
         $compressedSize = (Get-Item "check_music_validity.exe").length / 1MB
         Write-Host "Compressed size: $([math]::Round($compressedSize, 2)) MB"
