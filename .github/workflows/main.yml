@@ -66,15 +66,15 @@ jobs:
           --add-binary "C:\ProgramData\chocolatey\lib\ffmpeg\tools\ffmpeg\bin\ffmpeg.exe;." `
           --add-binary "C:\ProgramData\chocolatey\lib\ffmpeg\tools\ffmpeg\bin\ffprobe.exe;." `
           --upx-dir="C:\ProgramData\chocolatey\lib\upx\tools" `
-          --noupx `  # Disable initial UPX to apply our own settings later
-          --clean `  # Clean PyInstaller cache
-          --strip `  # Strip symbols from binary
-          --exclude-module tkinter `  # Remove unnecessary modules
+          --noupx `
+          --clean `
+          --strip `
+          --exclude-module tkinter `
           --exclude-module matplotlib `
           --exclude-module PIL `
           --exclude-module PyQt5 `
           --exclude-module PySide2 `
-          --exclude-module wx
+          --exclude-module wx `
           
         # Get original size
         $originalSize = (Get-Item "dist\check_music_validity.exe").length / 1MB
