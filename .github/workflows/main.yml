@@ -42,6 +42,13 @@ jobs:
         # Verify FFmpeg installation
         ffmpeg -version
         ffprobe -version
+    
+    - name: Install UPX
+      run: |
+        choco install upx -y
+        refreshenv
+        # Verify UPX installation
+        upx --version
 
     # Add FFmpeg to PATH
     - name: Add FFmpeg to PATH
@@ -55,7 +62,7 @@ jobs:
 
     - name: Build executable
       run: |
-        pyinstaller test-music-validity.py --onefile --icon=icon.ico --name=check_music_validity --add-binary "C:\ProgramData\chocolatey\lib\ffmpeg\tools\ffmpeg\bin\ffmpeg.exe;." --add-binary "C:\ProgramData\chocolatey\lib\ffmpeg\tools\ffmpeg\bin\ffprobe.exe;."
+        pyinstaller test-music-validity.py --onefile --icon=icon.ico --name=check_music_validity --add-binary "C:\ProgramData\chocolatey\lib\ffmpeg\tools\ffmpeg\bin\ffmpeg.exe;." --add-binary "C:\ProgramData\chocolatey\lib\ffmpeg\tools\ffmpeg\bin\ffprobe.exe;." --upx-dir="C:\ProgramData\chocolatey\lib\upx\tools" --upx-exclude="vcruntime140.dll" --upx-exclude="python*.dll"
 
     # Optionally verify that it works (provided that it does not need user interaction)
     - run: ./dist/check_music_validity.exe
