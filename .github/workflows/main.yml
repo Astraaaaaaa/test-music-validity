@@ -76,8 +76,7 @@ jobs:
           --exclude-module PIL `
           --exclude-module PyQt5 `
           --exclude-module PySide2 `
-          --exclude-module wx `
-          test-music-validity.py
+          --exclude-module wx
           
         # Get original size
         $originalSize = (Get-Item "dist\check_music_validity.exe").length / 1MB
