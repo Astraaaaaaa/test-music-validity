@@ -89,7 +89,6 @@ jobs:
           --exclude-module asyncio `
           --exclude-module concurrent `
           --exclude-module xmlrpc `
-          --exclude-module urllib `
           --exclude-module ftplib `
           --exclude-module setuptools `
           --exclude-module distutils `
