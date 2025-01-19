@@ -59,7 +59,7 @@ jobs:
 
     # Optionally verify that it works (provided that it does not need user interaction)
     - run: ./dist/check_music_validity.exe
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: build-artifact
         path: dist/*
@@ -68,6 +68,9 @@ jobs:
   release:
     runs-on: windows-latest
     needs: build
+    permissions:
+      contents: write
+      packages: write
     if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
 
     steps:
@@ -104,26 +107,27 @@ jobs:
         } else {
           echo "tag_exists=false" >> $env:GITHUB_ENV
         }
-        
-    - name: Create Release
-      id: create_release
-      if: env.tag_exists == 'false'  # Only create release if tag does not exist
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.PAT }}
+    
+    - name: Create Release and Upload Asset
+      uses: ncipollo/release-action@v1
       with:
-        tag_name: ${{ steps.determine_tag_name.outputs.tag_name }}
-        release_name: ${{ steps.determine_tag_name.outputs.tag_name }}
-        draft: false
-        prerelease: false
-
-    - name: Upload Release Asset
-      if: ${{ github.event.inputs.upload_artifact == 'true' && env.tag_exists == 'false' }}  # Only upload if tag does not exist
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.PAT }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./dist/check_music_validity.exe
-        asset_name: check_music_validity.exe
-        asset_content_type: application/octet-stream
+        allowUpdates: true
+        token: ${{ secrets.PAT }}
+        tag: ${{ steps.determine_tag_name.outputs.tag_name }}
+        name: Release ${{ steps.determine_tag_name.outputs.tag_name }}
+        body: |
+          ## Music File Validator Release ${{ steps.determine_tag_name.outputs.tag_name }}
+          
+          ### Features
+          - MP3 file validation
+          - Audio quality analysis
+          - Excel report generation
+          
+          ### Included Files
+          - check_music_validity.exe - Main executable
+          
+          ### Requirements
+          - Windows OS
+          - No additional dependencies needed (FFmpeg included)
+        artifacts: "./dist/check_music_validity.exe"
+        artifactErrorsFailBuild: true
