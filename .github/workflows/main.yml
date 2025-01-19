@@ -114,6 +114,20 @@ jobs:
       with:
         tag_name: ${{ steps.determine_tag_name.outputs.tag_name }}
         release_name: ${{ steps.determine_tag_name.outputs.tag_name }}
+        body: |
+          ## Music File Validator Release
+          
+          ### Features
+          - MP3 file validation
+          - Audio quality analysis
+          - Excel report generation
+          
+          ### Included Files
+          - check_music_validity.exe - Main executable
+          
+          ### Requirements
+          - Windows OS
+          - No additional dependencies needed (FFmpeg included)
         draft: false
         prerelease: false
 
